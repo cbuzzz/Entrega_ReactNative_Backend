@@ -11,9 +11,13 @@ export const getEntries = {
     addExperiencies: async(idUser:string,idExp:string)=>{
         return await usersofDB.findByIdAndUpdate(idUser,{$addToSet:{experiencies:idExp}});
     },
-    delExperiencies: async(idUser:string,idExp:string)=>{
-        return await usersofDB.findByIdAndDelete(idUser,{$pull:{experiencies:idExp}});
-    },
+    delExperiencies: async (idUser: string, idExp: string) => {
+        return await usersofDB.findByIdAndUpdate(
+          idUser,
+          { $pull: { experiencies: idExp } }, // Usamos $pull para eliminar solo la experiencia
+          { new: true } // Opción para devolver el documento actualizado
+        );
+      },
     create: async(entry:object)=>{
         return await usersofDB.create(entry);
     },
