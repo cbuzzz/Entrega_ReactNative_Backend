@@ -5,6 +5,18 @@ import * as experienciasServices from '../services/experienciasServices'
 
 const router = express.Router()
 
+router.get('/search', async (req, res) => {
+    const { username } = req.query; // Aquí se debe enviar el campo `name` desde el frontend
+
+    try {
+        const experiencias = await experienciasServices.getEntries.getExperiencesByUsername(username as string);
+        console.log('Final experiences returned:', experiencias); // Depuración
+        res.json(experiencias);
+    } catch (error) {
+        res.status(500).json({ message: 'Error fetching experiences', error });
+    }
+})
+
 router.get('/', async (_req, res) => {
     const data = await experienciasServices.getEntries.getAll()
     return res.json(data);
@@ -44,16 +56,5 @@ router.delete('/delParticipant/:idExp/:idPart', async (req, res) => {
     const data = await experienciasServices.getEntries.delParticipant(req.params.idExp, req.params.idPart)
     return res.json(data);
 })
-
-router.get('/search', async (req, res) => {
-    const { username } = req.query;
-
-    try {
-        const experiencias = await experienciasServices.getEntries.getExperiencesByUsername(username as string);
-        res.json(experiencias);
-    } catch (error) {
-        res.status(500).json({ message: 'Error fetching experiences', error });
-    }
-});
 
 export default router
